@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMania</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Witamy w MathMania!</h1>
+        <h2>Wybierz działanie:</h2>
+        <div class="options">
+            <button class="option-btn subtract" onclick="selectQuiz('minussing')">➖ Odejmowanie</button>
+            <button class="option-btn add" onclick="selectQuiz('adding')">➕ Dodawanie</button>
+            <button class="option-btn multiply" onclick="selectQuiz('multiplying')">✖️ Mnożenie</button>
+        </div>
+        
+        <div id="pin-entry" class="hidden">
+            <p>Wprowadź kod rodziców, aby rozpocząć:</p>
+            <input type="password" id="pin" maxlength="4" placeholder="****">
+            <button class="confirm-btn" onclick="validatePin()">Potwierdź</button>
+        </div>
+
+        <div id="quiz-section" class="hidden">
+            <h2 id="quiz-question"></h2>
+            <input type="number" id="answer" placeholder="Twoja odpowiedź">
+            <button class="confirm-btn" onclick="checkAnswer()">Zatwierdź</button>
+        </div>
+
+        <div class="currency">
+            <h3>Masz <span id="points">0</span> Punktów.</h3>
+        </div>
+
+        <p id="back-to-home" class="hidden">Powróć na stronę główną</p>
+
+        <div id="rewards" class="hidden">
+            <h2>Twoje Nagrody</h2>
+            <ul>
+                <li>5 Minut – 5 Punktów <button onclick="redeemReward(5)">Odbierz</button></li>
+                <li>30 Minut – 30 Punktów <button onclick="redeemReward(30)">Odbierz</button></li>
+                <li>40 Minut – 40 Punktów <button onclick="redeemReward(40)">Odbierz</button></li>
+                <li>60 Minut – 60 Punktów <button onclick="redeemReward(60)">Odbierz</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
