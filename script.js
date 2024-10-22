@@ -1,18 +1,8 @@
-let points = 0; // Initialize points
-let currentOperation = ''; // Track the current operation
-
-// Load points from the file on page load
-window.onload = function() {
-    fetch('points.txt')
-        .then(response => response.text())
-        .then(data => {
-            points = parseInt(data) || 0; // Set points from the file
-            document.getElementById('points').innerText = points; // Display points
-        });
-};
+let points = 0; // Placeholder for token/point system
+let currentQuizType = ''; // Store the type of quiz selected
 
 function selectQuiz(type) {
-    currentOperation = type; // Store the selected operation
+    currentQuizType = type; // Save the quiz type
     document.querySelector('.options').classList.add('hidden');
     document.getElementById('pin-entry').classList.remove('hidden');
 }
@@ -29,66 +19,38 @@ function validatePin() {
 }
 
 function loadRandomQuiz() {
-    const question = generateRandomQuestion(currentOperation);
+    const question = generateRandomQuestion(currentQuizType);
     document.getElementById('quiz-question').innerText = question;
+    document.getElementById('answer').value = ''; // Clear previous answer
 }
 
-function generateRandomQuestion(operation) {
-    let num1, num2;
-    switch (operation) {
-        case 'minussing':
-            num1 = Math.floor(Math.random() * 75) + 1; // 1 to 75
-            num2 = Math.floor(Math.random() * num1) + 1; // 1 to num1
-            return `${num1} - ${num2}`;
-        case 'adding':
-            num1 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-            num2 = Math.floor(Math.random() * 100) + 1; // 1 to 100
-            return `${num1} + ${num2}`;
-        case 'multiplying':
-            num1 = Math.floor(Math.random() * 10) + 1; // 1 to 10
-            num2 = Math.floor(Math.random() * 10) + 1; // 1 to 10
-            return `${num1} * ${num2}`;
-        default:
-            return '';
+function generateRandomQuestion(type) {
+    let num1, num2, question;
+    
+    if (type === 'minussing') {
+        num1 = Math.floor(Math.random() * 75) + 1; // Range 1-75
+        num2 = Math.floor(Math.random() * 75) + 1;
+        question = `${num1} - ${num2}`;
+    } else if (type === 'adding') {
+        num1 = Math.floor(Math.random() * 100) + 1; // Range 1-100
+        num2 = Math.floor(Math.random() * 100) + 1;
+        question = `${num1} + ${num2}`;
+    } else if (type === 'multiplying') {
+        num1 = Math.floor(Math.random() * 10) + 1; // Range 1-10
+        num2 = Math.floor(Math.random() * 10) + 1;
+        question = `${num1} * ${num2}`;
     }
+
+    return question;
 }
 
 function checkAnswer() {
-    const question = document.getElementById('quiz-question').innerText;
     const userAnswer = parseInt(document.getElementById('answer').value);
-    const correctAnswer = evaluateAnswer(question);
+    const correctAnswer = eval(document.getElementById('quiz-question').innerText); // Evaluate the correct answer
 
     if (userAnswer === correctAnswer) {
         points += 1; // Increment points for correct answer
-        savePoints(); // Save points to the file
     }
-    
-    document.getElementById('points').innerText = points; // Update points display
-    document.getElementById('answer').value = ''; // Clear answer input
-    loadRandomQuiz(); // Load next question
-}
-
-function evaluateAnswer(question) {
-    return eval(question); // Evaluate the expression (e.g., "5 + 3" => 8)
-}
-
-function savePoints() {
-    fetch('savePoints.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ points: points })
-    });
-}
-
-function redeemReward(cost) {
-    if (points >= cost) {
-        points -= cost; // Deduct points for redemption
-        savePoints(); // Save updated points
-        document.getElementById('points').innerText = points; // Update points display
-        alert("Nagroda odebrana!");
-    } else {
-        alert("Nie masz wystarczających punktów!");
-    }
+    document.getElementById('points-display').innerText = points; // Update points display
+    loadRandomQuiz(); // Load the next question
 }
